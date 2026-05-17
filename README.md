@@ -121,29 +121,6 @@ A aplicação estará disponível em: `http://127.0.0.1:8000`
 - `PUT /api/responsaveis/{id}/` - Atualizar responsável
 - `DELETE /api/responsaveis/{id}/` - Deletar responsável
 
-## ��� Variáveis de Ambiente (.env)
-
-```env
-# Django
-DEBUG=True
-SECRET_KEY=sua-chave-secreta-aqui
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-# Database
-DB_ENGINE=django.db.backends.sqlite3
-DB_NAME=db.sqlite3
-# DB_USER=seu_usuario
-# DB_PASSWORD=sua_senha
-# DB_HOST=localhost
-# DB_PORT=5432
-
-# Email (opcional)
-EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-
-# CORS
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-```
-
 ## 🧪 Testes
 
 Executar os testes do projeto:
@@ -204,9 +181,6 @@ Use as credenciais do superusuário criado na instalação.
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
 ## 👨‍💻 Autor
 
