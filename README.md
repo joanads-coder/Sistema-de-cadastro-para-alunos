@@ -1,4 +1,4 @@
-# Sistema de Cadastro para instituição de ensino📚
+# Sistema de Cadastro para instituição de ensino📚 - Prática da Faculdade 
 
 Um sistema completo de gerenciamento de alunos desenvolvido com **Django** e **Django REST Framework**, permitindo cadastro, monitoramento de notas, presença e informações de responsáveis.
 
