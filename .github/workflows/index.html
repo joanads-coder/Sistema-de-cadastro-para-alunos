@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Cadastro Escolar</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --sidebar: #11263d;
+        --sidebar-hover: #1a3552;
+        --primary: #2f80ed;
+        --primary-dark: #1b5ec4;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --danger: #e74c3c;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --shadow: 0 10px 30px rgba(17, 38, 61, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .app {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 250px;
+        background: var(--sidebar);
+        color: #fff;
+        padding: 24px 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+        padding: 10px 12px;
+      }
+
+      .brand-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #4dabf7, #2f80ed);
+        font-weight: 700;
+      }
+
+      .brand h2 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        color: #dfeaf7;
+        transition: 0.2s ease;
+      }
+
+      .nav-item:hover,
+      .nav-item.active {
+        background: var(--sidebar-hover);
+        color: #fff;
+      }
+
+      .content {
+        flex: 1;
+        padding: 28px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .topbar h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .search {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 12px 14px;
+        border-radius: 10px;
+        min-width: 260px;
+        box-shadow: var(--shadow);
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: 0.2s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background: #edf4ff;
+        color: var(--primary-dark);
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(180px, 1fr));
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .card small {
+        color: var(--muted);
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .card strong {
+        display: block;
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+
+      .badge {
+        display: inline-block;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+      }
+
+      .badge.success {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+      }
+
+      .badge.warning {
+        background: rgba(243, 156, 18, 0.12);
+        color: var(--warning);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1.35fr 0.85fr;
+        gap: 22px;
+        margin-bottom: 22px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 22px;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .panel-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        gap: 16px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field label {
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-size: 0.96rem;
+        background: #fff;
+      }
+
+      .field textarea {
+        resize: vertical;
+        min-height: 90px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 12px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .status-pill {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .status-pill.ativo {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+      }
+
+      .status-pill.inativo {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+      }
+
+      .status-pill.transferido {
+        background: rgba(17, 24, 39, 0.08);
+        color: #374151;
+      }
+
+      .mini-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .summary-item {
+        background: #f8fafc;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 16px;
+      }
+
+      .summary-item strong {
+        font-size: 1.25rem;
+        display: block;
+      }
+
+      .footer-note {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      @media (max-width: 980px) {
+        .app {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+        }
+
+        .grid,
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-icon">E</div>
+          <div>
+            <h2>Escola Nova</h2>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="#" class="nav-item active">📊 Dashboard</a>
+          <a href="#alunos" class="nav-item">👨‍🎓 Alunos</a>
+          <a href="#notas" class="nav-item">📝 Notas</a>
+          <a href="#presenca" class="nav-item">✅ Presença</a>
+          <a href="#responsaveis" class="nav-item">👨‍👩‍👧 Responsáveis</a>
+          <a href="#relatorios" class="nav-item">📈 Relatórios</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <h1>Cadastro e Gestão Escolar</h1>
+          <div class="actions">
+            <input class="search" type="text" placeholder="Buscar aluno, matrícula ou e-mail" />
+            <button class="btn btn-primary">+ Novo cadastro</button>
+          </div>
+        </header>
+
+        <section class="cards">
+          <div class="card">
+            <small>Total de alunos</small>
+            <strong>482</strong>
+            <span class="badge success">+8,2% este mês</span>
+          </div>
+          <div class="card">
+            <small>Média geral</small>
+            <strong>8,4</strong>
+            <span class="badge warning">Boa performance</span>
+          </div>
+          <div class="card">
+            <small>Presença</small>
+            <strong>96%</strong>
+            <span class="badge success">Excelente</span>
+          </div>
+          <div class="card">
+            <small>Ativos</small>
+            <strong>421</strong>
+            <span class="badge success">89% do total</span>
+          </div>
+        </section>
+
+        <section class="grid">
+          <div class="panel" id="alunos">
+            <div class="panel-header">
+              <h3>Cadastro de Aluno</h3>
+              <button class="btn btn-secondary">Salvar</button>
+            </div>
+
+            <form>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="nome">Nome completo</label>
+                  <input id="nome" type="text" value="Maria Eduarda Silva" />
+                </div>
+
+                <div class="field">
+                  <label for="matricula">Matrícula</label>
+                  <input id="matricula" type="text" value="2025001" />
+                </div>
+
+                <div class="field">
+                  <label for="cpf">CPF</label>
+                  <input id="cpf" type="text" value="12345678909" />
+                </div>
+
+                <div class="field">
+                  <label for="email">E-mail</label>
+                  <input id="email" type="email" value="maria@email.com" />
+                </div>
+
+                <div class="field">
+                  <label for="nascimento">Data de nascimento</label>
+                  <input id="nascimento" type="date" value="2012-08-14" />
+                </div>
+
+                <div class="field">
+                  <label for="genero">Gênero</label>
+                  <select id="genero">
+                    <option selected>Feminino</option>
+                    <option>Masculino</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="serie">Série</label>
+                  <select id="serie">
+                    <option selected>7º Ano</option>
+                    <option>6º Ano</option>
+                    <option>8º Ano</option>
+                    <option>9º Ano</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="turma">Turma</label>
+                  <select id="turma">
+                    <option selected>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                    <option>D</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="status">Status</label>
+                  <select id="status">
+                    <option selected>Ativo</option>
+                    <option>Inativo</option>
+                    <option>Transferido</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="telefone">Telefone</label>
+                  <input id="telefone" type="tel" value="(11) 98765-4321" />
+                </div>
+
+                <div class="field full">
+                  <label for="endereco">Endereço</label>
+                  <textarea id="endereco">Rua das Flores, 145, Bairro Centro, São Paulo - SP</textarea>
+                </div>
+
+                <div class="field full">
+                  <label for="foto">Foto do aluno</label>
+                  <input id="foto" type="file" />
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="panel" id="relatorios">
+            <div class="panel-header">
+              <h3>Resumo rápido</h3>
+            </div>
+
+            <div class="mini-summary">
+              <div class="summary-item">
+                <small>Alunos aprovados</small>
+                <strong>356</strong>
+                <span class="badge success">74%</span>
+              </div>
+
+              <div class="summary-item">
+                <small>Recuperação</small>
+                <strong>82</strong>
+                <span class="badge warning">17%</span>
+              </div>
+
+              <div class="summary-item">
+                <small>Faltas no mês</small>
+                <strong>34</strong>
+                <span class="badge success">Baixo índice</span>
+              </div>
+
+              <div class="summary-item">
+                <small>Responsáveis registrados</small>
+                <strong>438</strong>
+                <span class="badge success">96%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid">
+          <div class="panel" id="notas">
+            <div class="panel-header">
+              <h3>Registro de notas</h3>
+              <button class="btn btn-primary">+ Adicionar nota</button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Aluno</th>
+                    <th>Disciplina</th>
+                    <th>Bimestre</th>
+                    <th>Nota</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Maria Eduarda</td>
+                    <td>Matemática</td>
+                    <td>1º Bimestre</td>
+                    <td>9,5</td>
+                    <td><span class="status-pill ativo">Aprovado</span></td>
+                  </tr>
+                  <tr>
+                    <td>João Pedro</td>
+                    <td>Português</td>
+                    <td>2º Bimestre</td>
+                    <td>8,1</td>
+                    <td><span class="status-pill ativo">Aprovado</span></td>
+                  </tr>
+                  <tr>
+                    <td>Laura Santos</td>
+                    <td>História</td>
+                    <td>3º Bimestre</td>
+                    <td>6,4</td>
+                    <td><span class="status-pill inativo">Recuperação</span></td>
+                  </tr>
+                  <tr>
+                    <td>Pedro Henrique</td>
+                    <td>Ciências</td>
+                    <td>4º Bimestre</td>
+                    <td>7,8</td>
+                    <td><span class="status-pill ativo">Aprovado</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel" id="presenca">
+            <div class="panel-header">
+              <h3>Controle de presença</h3>
+              <button class="btn btn-secondary">Registrar</button>
+            </div>
+
+            <div class="mini-summary">
+              <div class="summary-item">
+                <small>Presente</small>
+                <strong>468</strong>
+              </div>
+              <div class="summary-item">
+                <small>Ausente</small>
+                <strong>21</strong>
+              </div>
+              <div class="summary-item">
+                <small>Atraso</small>
+                <strong>14</strong>
+              </div>
+              <div class="summary-item">
+                <small>Justificado</small>
+                <strong>11</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="responsaveis">
+          <div class="panel-header">
+            <h3>Responsáveis</h3>
+            <button class="btn btn-primary">+ Novo responsável</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Aluno</th>
+                  <th>Parentesco</th>
+                  <th>E-mail</th>
+                  <th>Telefone</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>José Silva</td>
+                  <td>Maria Eduarda</td>
+                  <td>Pai</td>
+                  <td>jose@email.com</td>
+                  <td>(11) 99876-5544</td>
+                  <td><span class="status-pill ativo">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td>Carla Santos</td>
+                  <td>João Pedro</td>
+                  <td>Mãe</td>
+                  <td>carla@email.com</td>
+                  <td>(11) 91234-8877</td>
+                  <td><span class="status-pill ativo">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td>Arlete Costa</td>
+                  <td>Laura Santos</td>
+                  <td>Avó</td>
+                  <td>arlete@email.com</td>
+                  <td>(11) 98877-1133</td>
+                  <td><span class="status-pill inativo">Inativo</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="footer-note">Sistema de cadastro escolar desenvolvido para gestão de alunos, notas, presença e responsáveis.</div>
+      </main>
+    </div>
+  </body>
+</html>
